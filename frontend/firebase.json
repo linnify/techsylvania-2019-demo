@@ -1,0 +1,11 @@
+{
+  "hosting": {
+    "public": "dist/techsylvania",
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}
