@@ -1,0 +1,18 @@
+@import '~@angular/material/theming';
+
+$font-family: 'Metropolis, Arial, sans-serif';
+$app-typography: mat-typography-config(
+  $font-family: $font-family,
+  $display-4: mat-typography-level(98.1px, 98.1px, 300, $font-family, -1.5px),
+  $display-3: mat-typography-level(61.31px, 61.31px, 400, $font-family, -0.5px),
+  $display-2: mat-typography-level(49.05px, 49.05px, 400, $font-family, 0px),
+  $display-1: mat-typography-level(34.74px, 40px, 400, $font-family, 0.25px),
+  $headline: mat-typography-level(24.53px, 32px, 400, $font-family, 0px),
+  $title: mat-typography-level(20.44px, 32px, 500, $font-family, 0.25px),
+  $body-2: mat-typography-level(14.31px, 24px, 500, $font-family, 0.25px),
+  $body-1: mat-typography-level(16.35px, 20px, 400, $font-family, 0.5px),
+  $subheading-2: mat-typography-level(16.35px, 28px, 400, $font-family, 0.15px),
+  $subheading-1: mat-typography-level(14.31px, 24px, 400, $font-family, 0.1px),
+  $button: mat-typography-level(14.31px, 14px, 500, $font-family, 1.25px),
+  $caption: mat-typography-level(12.26px, 20px, 400, $font-family, 0.4px)
+);
