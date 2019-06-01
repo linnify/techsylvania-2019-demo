@@ -1,0 +1,12 @@
+{
+  "extends": ["tslint:latest", "tslint-config-prettier"],
+  "rules": {
+    "no-console": false,
+    "array-type": [true, "array"],
+    "member-access": false,
+    "no-implicit-dependencies": [true, "dev"],
+    "no-submodule-imports": [true, "uuid"],
+    "object-literal-sort-keys": false,
+    "quotemark": [true, "single"]
+  }
+}
