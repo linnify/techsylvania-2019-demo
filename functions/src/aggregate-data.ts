@@ -1,48 +1,21 @@
 import { Request, Response } from 'express';
+import { AggregateDataRequest } from '../types/aggregate-data-request.interface';
 import { BigQuery, Table } from '@google-cloud/bigquery';
-import { AggregateDataRequest } from './aggregate-data-request';
+import { createCloudTask } from './utils';
 
-const { v2beta3 } = require('@google-cloud/tasks');
 const bigQueryClient: BigQuery = new BigQuery();
-const cloudTaskClient = new v2beta3.CloudTasksClient();
-
 const projectId: string = process.env.GCP_PROJECT;
+const checkAggregateJobUrl: string =
+  'https://us-central1-techsylvania-2019-demo.cloudfunctions.net/check-aggregate-job';
 
-const createCheckAggregateJobTask = (payload: { jobId: string }) => {
-  const queue: string = 'check-aggregate-jobs';
-  const location: string = process.env.FUNCTION_REGION;
-
-  const parent = cloudTaskClient.queuePath(projectId, location, queue);
-
-  const task = {
-    httpRequest: {
-      httpMethod: 'POST',
-      url:
-        'https://us-central1-techsylvania-2019-demo.cloudfunctions.net/check-aggregate-job',
-      body: Buffer.from(JSON.stringify(payload)).toString('base64')
-      // headers: {
-      //   "Content-Type": "application/json"
-      // }
-    },
-    scheduleTime: {
-      seconds: 600 + Date.now() / 1000
-    }
-  };
-
-  const request = {
-    parent,
-    task
-  };
-
-  return cloudTaskClient.createTask(request);
-};
-
-exports.aggregateData = async (req: Request, res: Response) => {
+export const aggregateData = async (req: Request, res: Response) => {
   if (req.method !== 'POST') {
-    return;
+    res.status(202);
   }
 
   const data: AggregateDataRequest = req.body;
+
+  console.log(data);
   const query: string = `SELECT final_data.*, source.display_name AS source_name, destination.display_name AS destination_name
      FROM \`${projectId}.${data.sourceDatasetId}.${
     data.sourceTableId
@@ -64,7 +37,7 @@ exports.aggregateData = async (req: Request, res: Response) => {
   //   destination: destinationTable
   // });
 
-  return createCheckAggregateJobTask({ jobId: '2112' }).then(() => {
+  return createCloudTask(checkAggregateJobUrl, { jobId: '2112' }).then(() => {
     res.send('Query started');
   });
 };

@@ -1,13 +1,13 @@
 {
-  "name": "functions",
+  "name": "techsylvania-demo-functions",
   "version": "1.0.0",
   "description": "",
-  "main": "lib/index.js",
+  "main": "./lib/index.js",
   "scripts": {
     "build": "./node_modules/.bin/tsc",
-    "deploy": "npm run build && gcloud functions deploy aggregate-data --entry-point aggregateData --runtime nodejs8 --trigger-http  --project techsylvania-2019-demo --region us-central1"
+    "deploy": "npm run build && ./scripts/deploy-all.sh"
   },
-  "author": "",
+  "author": "Linnify",
   "license": "ISC",
   "dependencies": {
     "@google-cloud/bigquery": "^4.1.0",

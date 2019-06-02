@@ -3,7 +3,7 @@
   "compilerOptions": {
     "target": "es6",
     "module": "commonjs",
-    "outDir": "lib",
+    "outDir": "./lib",
     "sourceMap": false,
     "noImplicitAny": true,
     "typeRoots": ["node_modules/@types"]
