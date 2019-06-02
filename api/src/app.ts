@@ -20,6 +20,6 @@ app.use(bodyParser.text());
 /**
  * App Routes
  */
-app.use('/', api.health);
-
+app.get('/', api.health);
+app.get('/max-mean', api.getMaxMeanValue);
 export default app;
