@@ -3,19 +3,16 @@ import { DataRequest } from '../types/data-request.interface';
 import { BigQuery, Table } from '@google-cloud/bigquery';
 import { checkAggregateJobUrl, createCloudTask } from './utils';
 import { CheckAggregateJobRequest } from '../types/check-aggregate-job-request.interface';
-import { Metadata } from '@google-cloud/common';
 
 const bigQueryClient: BigQuery = new BigQuery();
 const projectId: string = process.env.GCP_PROJECT;
 
 export const aggregateData = async (req: Request, res: Response) => {
-  console.log(req.query);
   const data: DataRequest = {
     sourceDatasetId: req.query.dataset,
     sourceTableId: req.query.table
   };
 
-  console.log(data);
   const query: string = `SELECT final_data.*, source.display_name AS source_name, destination.display_name AS destination_name
      FROM \`${projectId}.${data.sourceDatasetId}.${
     data.sourceTableId

@@ -18,7 +18,6 @@ export const checkAggregateJob = (req: Request, res: Response) => {
     sourceDatasetId: req.query.dataset
   };
 
-  console.log(data);
   bigQueryClient
     .job(data.jobId)
     .getMetadata()
