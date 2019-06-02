@@ -5,6 +5,9 @@ import { BigQuery, Table } from '@google-cloud/bigquery';
 const bigQueryClient: BigQuery = new BigQuery();
 const projectId: string = process.env.GCP_PROJECT;
 
+/**
+ * Function used to update the final data table.
+ */
 export const updateFinalData = (req: Request, res: Response) => {
   const data: DataRequest = {
     sourceTableId: req.query.table,

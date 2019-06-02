@@ -7,6 +7,9 @@ import { CheckAggregateJobRequest } from '../types/check-aggregate-job-request.i
 const bigQueryClient: BigQuery = new BigQuery();
 const projectId: string = process.env.GCP_PROJECT;
 
+/**
+ * Function used to append the source name and the destination name to the data received
+ */
 export const aggregateData = async (req: Request, res: Response) => {
   const data: DataRequest = {
     sourceDatasetId: req.query.dataset,
@@ -24,11 +27,18 @@ export const aggregateData = async (req: Request, res: Response) => {
     data.sourceDatasetId
   }.geo_boundries\` AS destination ON destination.movement_id = dstid
     `;
+
+  /**
+   * Instantiate a table where the query result will be saved.
+   */
   const destinationTableName: string = `${data.sourceTableId}_aggregated`;
   const destinationTable: Table = bigQueryClient
     .dataset(data.sourceDatasetId)
     .table(destinationTableName);
 
+  /**
+   * Run the job asynchronously
+   */
   const [job] = await bigQueryClient.createQueryJob({
     query,
     destination: destinationTable,
@@ -41,6 +51,9 @@ export const aggregateData = async (req: Request, res: Response) => {
     jobId: job.id
   };
 
+  /**
+   * Create a task to check if the job finished.
+   */
   return createCloudTask(
     'check-aggregate-job',
     `${checkAggregateJobUrl}?dataset=${

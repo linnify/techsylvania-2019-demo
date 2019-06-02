@@ -7,6 +7,13 @@ export const checkAggregateJobUrl: string = `${baseUrl}check-aggregate-job`;
 export const updateFinalDataUrl: string = `${baseUrl}update-final-data`;
 export const aggregateDataUrl: string = `${baseUrl}aggregate-data`;
 
+/**
+ * Create a cloud task
+ * @param queue - the name of the queue this task should be placed in
+ * @param url - the endpoint this task calls
+ * @param payload - the payload for the task
+ * @param seconds - the number of seconds this task will start after
+ */
 export const createCloudTask = (
   queue: string,
   url: string,

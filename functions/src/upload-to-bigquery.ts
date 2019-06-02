@@ -8,6 +8,9 @@ const bigQueryClient: BigQuery = new BigQuery();
 
 const bigQueryDataset: string = 'uber';
 
+/**
+ * Parse the name of the file to transform it into a table name accepted by bigquery
+ */
 const bigQuerySafeName = (fileName: string) => {
   let parsedText = fileName.split('.csv')[0].replace(/[_-]/g, '_');
   parsedText = parsedText.replace(/[^a-zA-Z0-9_]/g, '');
@@ -24,11 +27,12 @@ export const uploadToBigQuery = (data: any, context: any) => {
   }
 
   const file: File = storageClient.bucket(bucketName).file(fileName);
+
   const metadata = {
     sourceFormat: 'CSV',
-    skipLeadingRows: 1,
-    autodetect: true,
-    writeDisposition: 'WRITE_TRUNCATE'
+    skipLeadingRows: 1, // skip the header row
+    autodetect: true, // autodetect the table schema
+    writeDisposition: 'WRITE_TRUNCATE' // if the table already exists overwrite the table
   };
   const tableId: string = bigQuerySafeName(fileName);
 
@@ -41,6 +45,8 @@ export const uploadToBigQuery = (data: any, context: any) => {
         sourceDatasetId: bigQueryDataset,
         sourceTableId: tableId
       };
+
+      // create a task to go to the next step in the pipeline, which is the aggregate data step
       return createCloudTask(
         'aggregate-data',
         `${aggregateDataUrl}?dataset=${bigQueryDataset}&table=${tableId}`,
