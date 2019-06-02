@@ -3,9 +3,9 @@ const cloudTaskClient = new v2beta3.CloudTasksClient();
 
 const baseUrl =
   'https://us-central1-techsylvania-2019-demo.cloudfunctions.net/';
-export const checkAggregateJobUrl: string = `${baseUrl}/check-aggregate-job`;
-export const updateFinalDataUrl: string = `${baseUrl}/update-final-data`;
-export const aggregateDataUrl: string = `${baseUrl}/aggregate-data`;
+export const checkAggregateJobUrl: string = `${baseUrl}check-aggregate-job`;
+export const updateFinalDataUrl: string = `${baseUrl}update-final-data`;
+export const aggregateDataUrl: string = `${baseUrl}aggregate-data`;
 
 export const createCloudTask = (
   queue: string,
