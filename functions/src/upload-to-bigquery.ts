@@ -27,7 +27,8 @@ export const uploadToBigQuery = (data: any, context: any) => {
   const metadata = {
     sourceFormat: 'CSV',
     skipLeadingRows: 1,
-    autodetect: true
+    autodetect: true,
+    writeDisposition: 'WRITE_TRUNCATE'
   };
   const tableId: string = bigQuerySafeName(fileName);
 
@@ -40,6 +41,10 @@ export const uploadToBigQuery = (data: any, context: any) => {
         sourceDatasetId: bigQueryDataset,
         sourceTableId: tableId
       };
-      return createCloudTask('aggregate-data', aggregateDataUrl, aggregateData);
+      return createCloudTask(
+        'aggregate-data',
+        `${aggregateDataUrl}?dataset=${bigQueryDataset}&table=${tableId}`,
+        aggregateData
+      );
     });
 };

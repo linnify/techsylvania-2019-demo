@@ -6,20 +6,22 @@ const bigQueryClient: BigQuery = new BigQuery();
 const projectId: string = process.env.GCP_PROJECT;
 
 export const updateFinalData = (req: Request, res: Response) => {
-  if (req.method !== 'POST') {
-    res.status(202);
-  }
-  const data: DataRequest = req.body;
+  const data: DataRequest = {
+    sourceTableId: req.query.table,
+    sourceDatasetId: req.query.dataset
+  };
 
-  const query: string = ` SELECT sourceid, dstid, hod, AVG(mean_travel_time) mean_travel_time, 
+  const query: string = ` SELECT sourceid, dstid, hod, source_name, destination_name, AVG(mean_travel_time) mean_travel_time, 
    AVG(standard_deviation_travel_time) standard_deviation_travel_time, AVG(geometric_mean_travel_time) geometric_mean_travel_time,
    AVG(geometric_standard_deviation_travel_time) geometric_standard_deviation_travel_time
    FROM (
-    SELECT * FROM \`${projectId}.${data.sourceDatasetId}.final_destination\`
+    SELECT sourceid, dstid, hod, source_name, destination_name, mean_travel_time, standard_deviation_travel_time, geometric_mean_travel_time, geometric_standard_deviation_travel_time 
+    FROM \`${projectId}.${data.sourceDatasetId}.final_destination\`
     UNION ALL 
-    SELECT * FROM \`${projectId}.${data.sourceDatasetId}.${data.sourceTableId}\`
+    SELECT sourceid, dstid, hod, source_name, destination_name, mean_travel_time, standard_deviation_travel_time, geometric_mean_travel_time, geometric_standard_deviation_travel_time 
+    FROM \`${projectId}.${data.sourceDatasetId}.${data.sourceTableId}\`
    )
-   GROUP BY sourceid, dstid, hod
+   GROUP BY sourceid, dstid, hod, source_name, destination_name
   `;
 
   const destinationTable: Table = bigQueryClient

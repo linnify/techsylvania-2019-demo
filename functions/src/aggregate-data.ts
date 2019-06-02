@@ -9,11 +9,11 @@ const bigQueryClient: BigQuery = new BigQuery();
 const projectId: string = process.env.GCP_PROJECT;
 
 export const aggregateData = async (req: Request, res: Response) => {
-  if (req.method !== 'POST') {
-    res.status(202);
-  }
-
-  const data: DataRequest = req.body;
+  console.log(req.query);
+  const data: DataRequest = {
+    sourceDatasetId: req.query.dataset,
+    sourceTableId: req.query.table
+  };
 
   console.log(data);
   const query: string = `SELECT final_data.*, source.display_name AS source_name, destination.display_name AS destination_name
@@ -34,7 +34,8 @@ export const aggregateData = async (req: Request, res: Response) => {
 
   const [job] = await bigQueryClient.createQueryJob({
     query,
-    destination: destinationTable
+    destination: destinationTable,
+    writeDisposition: 'WRITE_TRUNCATE'
   });
 
   const checkAggregateData: CheckAggregateJobRequest = {
@@ -42,9 +43,12 @@ export const aggregateData = async (req: Request, res: Response) => {
     sourceTableId: destinationTableName,
     jobId: job.id
   };
+
   return createCloudTask(
     'check-aggregate-job',
-    checkAggregateJobUrl,
+    `${checkAggregateJobUrl}?dataset=${
+      data.sourceDatasetId
+    }&table=${destinationTableName}&jobId=${job.id}`,
     checkAggregateData
   ).then(() => {
     res.send('Query started');

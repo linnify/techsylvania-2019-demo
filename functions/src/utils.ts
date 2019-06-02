@@ -20,7 +20,7 @@ export const createCloudTask = (
 
   const task: any = {
     httpRequest: {
-      httpMethod: 'POST',
+      httpMethod: 'GET',
       url,
       body: payload,
       headers: {

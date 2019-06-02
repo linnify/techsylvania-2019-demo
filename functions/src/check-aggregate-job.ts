@@ -12,34 +12,39 @@ import { omit } from 'lodash';
 const bigQueryClient: BigQuery = new BigQuery();
 
 export const checkAggregateJob = (req: Request, res: Response) => {
-  if (req.method !== 'POST') {
-    res.status(202);
-  }
+  const data: CheckAggregateJobRequest = {
+    jobId: req.query.jobId,
+    sourceTableId: req.query.table,
+    sourceDatasetId: req.query.dataset
+  };
 
-  const data: CheckAggregateJobRequest = req.body;
-
+  console.log(data);
   bigQueryClient
     .job(data.jobId)
-    .poll_(
-      async (err: Error | null, metadata?: Metadata, apiResponse?: any) => {
-        if (metadata && metadata.status && metadata.status.state === 'DONE') {
-          await createCloudTask(
-            'update-final-data',
-            updateFinalDataUrl,
-            omit(data, ['jobId'])
-          );
-          res.send('Aggregate job finished, started update final data!');
-        }
-        if (err) {
-          res.status(202);
-        }
+    .getMetadata()
+    .then(async (value: [any, any]) => {
+      console.log(value[0]);
+      if (value[0] && value[0].status && value[0].status.state === 'DONE') {
+        await createCloudTask(
+          'update-final-data',
+          `${updateFinalDataUrl}?dataset=${data.sourceDatasetId}&table=${
+            data.sourceTableId
+          }`,
+          omit(data, ['jobId'])
+        );
+        res.send('Aggregate job finished, started update final data!');
+      } else if (value[0].errors) {
+        res.status(202);
+      } else {
         await createCloudTask(
           'check-aggregate-job',
-          checkAggregateJobUrl,
+          `${checkAggregateJobUrl}?dataset=${data.sourceDatasetId}&table=${
+            data.sourceTableId
+          }&jobId=${data.jobId}`,
           data,
           5
         );
         res.send('Aggregate job still in progress!');
       }
-    );
+    });
 };
