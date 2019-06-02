@@ -6,7 +6,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './material/material.module';
-import { AngularFireStorageModule } from '@angular/fire/storage';
+import { AngularFireStorageModule, StorageBucket } from '@angular/fire/storage';
 import { environment } from 'src/environments/environment';
 
 import * as fromComponents from './components';
@@ -21,7 +21,7 @@ import * as fromComponents from './components';
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireStorageModule
   ],
-  providers: [],
+  providers: [{ provide: StorageBucket, useValue: 'techsylvania_travel_data' }],
   bootstrap: [AppComponent],
   entryComponents: [...fromComponents.entryComponents]
 })
