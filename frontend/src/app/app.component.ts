@@ -6,7 +6,7 @@ import { AddDataComponent } from './components';
   selector: 'app-root',
   template: `
     <app-app-bar></app-app-bar>
-
+    <app-chart-data></app-chart-data>
     <app-add-data-button (add)="onAdd()"></app-add-data-button>
   `,
   styleUrls: ['./app.component.scss']

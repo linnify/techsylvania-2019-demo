@@ -10,6 +10,7 @@ import { AngularFireStorageModule, StorageBucket } from '@angular/fire/storage';
 import { environment } from 'src/environments/environment';
 
 import * as fromComponents from './components';
+import { ChartsModule } from 'ng2-charts';
 
 @NgModule({
   declarations: [AppComponent, ...fromComponents.components],
@@ -19,7 +20,8 @@ import * as fromComponents from './components';
     BrowserAnimationsModule,
     MaterialModule,
     AngularFireModule.initializeApp(environment.firebase),
-    AngularFireStorageModule
+    AngularFireStorageModule,
+    ChartsModule
   ],
   providers: [{ provide: StorageBucket, useValue: 'techsylvania_travel_data' }],
   bootstrap: [AppComponent],
