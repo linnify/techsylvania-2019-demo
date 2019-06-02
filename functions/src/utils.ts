@@ -1,14 +1,24 @@
 const { v2beta3 } = require('@google-cloud/tasks');
 const cloudTaskClient = new v2beta3.CloudTasksClient();
 
-export const createCloudTask = (url: string, payload: any) => {
-  const queue: string = 'check-aggregate-job';
+const baseUrl =
+  'https://us-central1-techsylvania-2019-demo.cloudfunctions.net/';
+export const checkAggregateJobUrl: string = `${baseUrl}/check-aggregate-job`;
+export const updateFinalDataUrl: string = `${baseUrl}/update-final-data`;
+export const aggregateDataUrl: string = `${baseUrl}/aggregate-data`;
+
+export const createCloudTask = (
+  queue: string,
+  url: string,
+  payload: any,
+  seconds?: number
+) => {
   const location: string = process.env.FUNCTION_REGION;
   const projectId: string = process.env.GCP_PROJECT;
 
   const parent = cloudTaskClient.queuePath(projectId, location, queue);
 
-  const task = {
+  const task: any = {
     httpRequest: {
       httpMethod: 'POST',
       url,
@@ -18,6 +28,12 @@ export const createCloudTask = (url: string, payload: any) => {
       }
     }
   };
+
+  if (seconds) {
+    task.scheduleTime = {
+      seconds: seconds + Date.now() / 1000
+    };
+  }
 
   const request = {
     parent,

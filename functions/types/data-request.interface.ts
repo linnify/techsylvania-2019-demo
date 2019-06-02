@@ -1,4 +1,4 @@
-export interface AggregateDataRequest {
+export interface DataRequest {
   sourceDatasetId: string;
   sourceTableId: string;
 }

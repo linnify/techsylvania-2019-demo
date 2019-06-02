@@ -1,14 +1,12 @@
 import { File, Storage } from '@google-cloud/storage';
 import { BigQuery } from '@google-cloud/bigquery';
-import { AggregateDataRequest } from '../types/aggregate-data-request.interface';
-import { createCloudTask } from './utils';
+import { DataRequest } from '../types/data-request.interface';
+import { aggregateDataUrl, createCloudTask } from './utils';
 
 const storageClient: Storage = new Storage();
 const bigQueryClient: BigQuery = new BigQuery();
 
 const bigQueryDataset: string = 'uber';
-const aggregateDataUrl: string =
-  'https://us-central1-techsylvania-2019-demo.cloudfunctions.net/aggregate-data';
 
 const bigQuerySafeName = (fileName: string) => {
   let parsedText = fileName.split('.csv')[0].replace(/[_-]/g, '_');
@@ -38,10 +36,10 @@ export const uploadToBigQuery = (data: any, context: any) => {
     .table(tableId)
     .load(file, metadata)
     .then(() => {
-      const aggregateData: AggregateDataRequest = {
+      const aggregateData: DataRequest = {
         sourceDatasetId: bigQueryDataset,
         sourceTableId: tableId
       };
-      return createCloudTask(aggregateDataUrl, aggregateData);
+      return createCloudTask('aggregate-data', aggregateDataUrl, aggregateData);
     });
 };
