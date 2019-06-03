@@ -3,14 +3,12 @@ import { BigQuery } from '@google-cloud/bigquery';
 import { DataRow } from '../types/data-row.interface';
 
 const bigQueryClient: BigQuery = new BigQuery();
-const bigQueryDataset: string = 'uber';
-const bigQueryTable: string = 'final_destination';
 
 /**
  * GET /
  * Check Health on our API
  */
-export const health = (req: Request, res: Response) => {
+export const checkHealth = (req: Request, res: Response) => {
   return res.send('Ok');
 };
 
@@ -33,15 +31,4 @@ export const getMaxMeanValue = async (req: Request, res: Response) => {
 
   const dataRow: DataRow = rows[0];
   res.json(dataRow);
-};
-
-export const data = async (req: Request, res: Response) => {
-  const [rows] = await bigQueryClient
-    .dataset(bigQueryDataset)
-    .table(bigQueryTable)
-    .getRows({
-      maxResults: 20
-    });
-
-  return res.send(rows);
 };
