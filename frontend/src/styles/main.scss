@@ -1,7 +1,5 @@
 @import '~@angular/material/theming';
-
 @import 'typography';
-
 @import 'theme';
 
 @include mat-core($app-typography);
@@ -13,11 +11,21 @@ html,
 body {
   height: 100%;
 }
+
 body {
   margin: 0;
   font-family: $font-family;
+  background-color: #f3f3f3;
 }
 
 .fill {
   flex: 1 1 auto;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.padding-24 {
+  padding: 24px;
 }

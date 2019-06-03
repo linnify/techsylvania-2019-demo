@@ -10,6 +10,10 @@ import { AngularFireStorageModule, StorageBucket } from '@angular/fire/storage';
 import { environment } from 'src/environments/environment';
 
 import * as fromComponents from './components';
+import { ChartsModule } from 'ng2-charts';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { HttpClientModule } from '@angular/common/http';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [AppComponent, ...fromComponents.components],
@@ -17,9 +21,13 @@ import * as fromComponents from './components';
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
+    ReactiveFormsModule,
     MaterialModule,
     AngularFireModule.initializeApp(environment.firebase),
-    AngularFireStorageModule
+    AngularFireStorageModule,
+    ChartsModule,
+    FlexLayoutModule,
+    HttpClientModule
   ],
   providers: [{ provide: StorageBucket, useValue: 'techsylvania_travel_data' }],
   bootstrap: [AppComponent],
