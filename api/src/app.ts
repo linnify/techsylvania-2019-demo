@@ -22,5 +22,6 @@ app.use(bodyParser.text());
  */
 app.get('/', api.health);
 app.get('/data', api.data);
+app.get('/max-mean', api.getMaxMeanValue);
 
 export default app;
