@@ -1,6 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import * as api from './controllers/api';
+import * as locationsController from './controllers/locations';
 
 /**
  * Create Express App
@@ -20,6 +21,8 @@ app.use(bodyParser.text());
 /**
  * App Routes
  */
-app.get('/', api.health);
+app.get('/', api.checkHealth);
+app.get('/locations', locationsController.getAll);
 app.get('/max-mean', api.getMaxMeanValue);
+
 export default app;

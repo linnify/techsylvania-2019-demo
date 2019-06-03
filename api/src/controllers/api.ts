@@ -1,5 +1,5 @@
+import { Response, Request } from 'express';
 import { BigQuery } from '@google-cloud/bigquery';
-import { Request, Response } from 'express';
 import { DataRow } from '../types/data-row.interface';
 
 const bigQueryClient: BigQuery = new BigQuery();
@@ -8,7 +8,7 @@ const bigQueryClient: BigQuery = new BigQuery();
  * GET /
  * Check Health on our API
  */
-export let health = (req: Request, res: Response) => {
+export const checkHealth = (req: Request, res: Response) => {
   return res.send('Ok');
 };
 
