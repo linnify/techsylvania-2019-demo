@@ -11,6 +11,8 @@ import { environment } from 'src/environments/environment';
 
 import * as fromComponents from './components';
 import { ChartsModule } from 'ng2-charts';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [AppComponent, ...fromComponents.components],
@@ -21,7 +23,9 @@ import { ChartsModule } from 'ng2-charts';
     MaterialModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireStorageModule,
-    ChartsModule
+    ChartsModule,
+    FlexLayoutModule,
+    HttpClientModule
   ],
   providers: [{ provide: StorageBucket, useValue: 'techsylvania_travel_data' }],
   bootstrap: [AppComponent],

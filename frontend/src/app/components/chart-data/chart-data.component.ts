@@ -5,7 +5,7 @@ import { Color, Label } from 'ng2-charts';
 @Component({
   selector: 'app-chart-data',
   template: `
-    <mat-card style="margin: 32px">
+    <mat-card>
       <canvas
         baseChart
         height="60px"

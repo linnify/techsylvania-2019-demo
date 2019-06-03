@@ -1,5 +1,6 @@
 export const environment = {
   production: true,
+  apiUrl: 'https://api-mxqpveqrmq-uc.a.run.app',
   firebase: {
     apiKey: 'AIzaSyBab6G_FbcWkK8zZBTEBc0Ih7-Nvgu2V8Q',
     authDomain: 'techsylvania-2019-demo.firebaseapp.com',
