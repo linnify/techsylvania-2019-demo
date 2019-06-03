@@ -20,6 +20,7 @@ app.use(bodyParser.text());
 /**
  * App Routes
  */
-app.use('/', api.health);
+app.get('/', api.health);
+app.get('/data', api.data);
 
 export default app;
