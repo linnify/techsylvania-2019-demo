@@ -8,7 +8,7 @@ import { Color, Label } from 'ng2-charts';
     <mat-card>
       <canvas
         baseChart
-        height="60px"
+        height="80px"
         [datasets]="lineChartData"
         [colors]="lineChartColors"
         [labels]="lineChartLabels"

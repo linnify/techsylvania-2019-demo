@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'https://api-mxqpveqrmq-uc.a.run.app',
+  apiUrl: 'http://localhost:8080',
   firebase: {
     apiKey: 'AIzaSyBab6G_FbcWkK8zZBTEBc0Ih7-Nvgu2V8Q',
     authDomain: 'techsylvania-2019-demo.firebaseapp.com',

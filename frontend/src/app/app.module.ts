@@ -13,6 +13,7 @@ import * as fromComponents from './components';
 import { ChartsModule } from 'ng2-charts';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { HttpClientModule } from '@angular/common/http';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [AppComponent, ...fromComponents.components],
@@ -20,6 +21,7 @@ import { HttpClientModule } from '@angular/common/http';
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
+    ReactiveFormsModule,
     MaterialModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireStorageModule,

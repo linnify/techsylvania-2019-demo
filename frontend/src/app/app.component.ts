@@ -4,6 +4,7 @@ import { AddDataComponent } from './components';
 import { Observable } from 'rxjs';
 import { Data } from './types/data.interface';
 import { DataService } from './services/data.service';
+import { Location } from './types/location.interface';
 
 @Component({
   selector: 'app-root',
@@ -15,6 +16,11 @@ import { DataService } from './services/data.service';
           fxFlex="50%"
           [data]="data$ | async"
         ></app-max-mean-card>
+
+        <app-select-locations-card
+          fxFlex="50%"
+          [locations]="locations$ | async"
+        ></app-select-locations-card>
       </div>
       <app-chart-data></app-chart-data>
     </div>
@@ -24,6 +30,7 @@ import { DataService } from './services/data.service';
 })
 export class AppComponent implements OnInit {
   data$: Observable<Data>;
+  locations$: Observable<Location[]>;
 
   constructor(
     private dialog: MatDialog,
@@ -33,6 +40,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.data$ = this.dataService.getMaxMean();
+    this.locations$ = this.dataService.getLocations();
   }
 
   onAdd() {
