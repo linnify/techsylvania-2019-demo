@@ -5,6 +5,8 @@ import { Observable } from 'rxjs';
 import { Data } from './types/data.interface';
 import { DataService } from './services/data.service';
 import { Location } from './types/location.interface';
+import { tap } from 'rxjs/operators';
+import { Path } from './types/path.interface';
 
 @Component({
   selector: 'app-root',
@@ -20,9 +22,11 @@ import { Location } from './types/location.interface';
         <app-select-locations-card
           fxFlex="50%"
           [locations]="locations$ | async"
+          [loading]="loadingChart"
+          (apply)="onApply($event)"
         ></app-select-locations-card>
       </div>
-      <app-chart-data></app-chart-data>
+      <app-chart-data [data]="averages$ | async"></app-chart-data>
     </div>
     <app-add-data-button (add)="onAdd()"></app-add-data-button>
   `,
@@ -31,6 +35,8 @@ import { Location } from './types/location.interface';
 export class AppComponent implements OnInit {
   data$: Observable<Data>;
   locations$: Observable<Location[]>;
+  averages$: Observable<Data[]>;
+  loadingChart = false;
 
   constructor(
     private dialog: MatDialog,
@@ -39,7 +45,17 @@ export class AppComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.data$ = this.dataService.getMaxMean();
+    this.data$ = this.dataService
+      .getMaxMean()
+      .pipe(
+        tap(
+          (data: Data) =>
+            (this.averages$ = this.dataService.getAverages(
+              data.sourceId,
+              data.destinationId
+            ))
+        )
+      );
     this.locations$ = this.dataService.getLocations();
   }
 
@@ -54,5 +70,12 @@ export class AppComponent implements OnInit {
           });
         }
       });
+  }
+
+  onApply(path: Path) {
+    this.loadingChart = true;
+    this.averages$ = this.dataService
+      .getAverages(path.sourceId, path.destinationId)
+      .pipe(tap(() => (this.loadingChart = false)));
   }
 }

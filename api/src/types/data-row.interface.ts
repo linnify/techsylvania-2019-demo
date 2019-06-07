@@ -4,4 +4,5 @@ export interface DataRow {
   sourceName: string;
   destinationName: string;
   meanTravelTime: number;
+  hourOfDay?: number;
 }

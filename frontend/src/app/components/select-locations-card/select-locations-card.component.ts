@@ -6,6 +6,7 @@ import {
   FormGroup,
   Validators
 } from '@angular/forms';
+import { Path } from '../../types/path.interface';
 
 @Component({
   selector: 'app-select-locations-card',
@@ -29,15 +30,14 @@ import {
               [options]="locations"
             ></app-filterable-select>
           </form>
-          <button
-            mat-raised-button
-            color="primary"
+          <app-loading-button
             class="full-width"
-            [disabled]="!form.valid"
-            (click)="onApply()"
+            [name]="'Apply'"
+            [disabled]="!form.valid || loading"
+            [loading]="loading"
+            (press)="onApply()"
           >
-            Apply
-          </button>
+          </app-loading-button>
         </ng-container>
 
         <ng-template #noData>
@@ -52,7 +52,8 @@ import {
 })
 export class SelectLocationsCardComponent implements OnInit {
   @Input() locations: Location[];
-  @Output() apply = new EventEmitter<string[]>();
+  @Input() loading: boolean;
+  @Output() apply = new EventEmitter<Path>();
 
   form: FormGroup;
 
@@ -73,5 +74,11 @@ export class SelectLocationsCardComponent implements OnInit {
     return this.form.get('destination') as FormControl;
   }
 
-  onApply() {}
+  onApply() {
+    const path: Path = {
+      sourceId: this.source.value,
+      destinationId: this.destination.value
+    };
+    this.apply.emit(path);
+  }
 }

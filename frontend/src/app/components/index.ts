@@ -5,6 +5,7 @@ import { ChartDataComponent } from './chart-data/chart-data.component';
 import { MaxMeanCardComponent } from './max-mean-card/max-mean-card.component';
 import { SelectLocationsCardComponent } from './select-locations-card/select-locations-card.component';
 import { FilterableSelectComponent } from './filterable-select/filterable-select.component';
+import { LoadingButtonComponent } from './loading-button/loading-button.component';
 
 export const components = [
   AddDataButtonComponent,
@@ -13,7 +14,8 @@ export const components = [
   ChartDataComponent,
   MaxMeanCardComponent,
   SelectLocationsCardComponent,
-  FilterableSelectComponent
+  FilterableSelectComponent,
+  LoadingButtonComponent
 ];
 
 export const entryComponents = [AddDataComponent];
@@ -21,3 +23,4 @@ export const entryComponents = [AddDataComponent];
 export * from './add-data/add-data.component';
 export * from './chart-data/chart-data.component';
 export * from './max-mean-card/max-mean-card.component';
+export * from './loading-button/loading-button.component';

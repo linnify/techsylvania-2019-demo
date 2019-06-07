@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ChartDataSets } from 'chart.js';
 import { Color, Label } from 'ng2-charts';
+import { Data } from '../../types/data.interface';
 
 @Component({
   selector: 'app-chart-data',
@@ -22,50 +23,25 @@ import { Color, Label } from 'ng2-charts';
 export class ChartDataComponent implements OnInit {
   public lineChartData: ChartDataSets[] = [
     {
-      data: [
-        {
-          x: 0,
-          y: 20
-        },
-        {
-          x: 1,
-          y: 30
-        },
-        {
-          x: 2,
-          y: 25
-        },
-        {
-          x: 3,
-          y: 20
-        },
-        {
-          x: 4,
-          y: 50
-        },
-        {
-          x: 5,
-          y: 15
-        },
-        {
-          x: 6,
-          y: 70
-        },
-        {
-          x: 7,
-          y: 36.3
-        },
-        {
-          x: 8,
-          y: 29
-        }
-      ],
       label: 'Mean average Time',
+      // xAxisID: 'Hour Of Day',
+      // yAxisID: 'Travel Time',
       fill: false
     }
   ];
-  public lineChartLabels: number[] = Array.from(Array(24), (x, index) => index);
-  public lineChartColors: Color[] = [
+
+  @Input() set data(value: Data[]) {
+    if (value) {
+      this.lineChartData[0].data = value.map((dataRow: Data) => ({
+        x: dataRow.hourOfDay,
+        y: dataRow.meanTravelTime
+      }));
+      console.log(this.lineChartData);
+    }
+  }
+
+  lineChartLabels: number[] = Array.from(Array(24), (x, index) => index);
+  lineChartColors: Color[] = [
     {
       borderColor: '#00838f'
     }

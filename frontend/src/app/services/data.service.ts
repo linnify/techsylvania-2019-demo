@@ -4,6 +4,7 @@ import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
 import { Location } from '../types/location.interface';
 import { map } from 'rxjs/operators';
+import { Data } from '../types/data.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -11,8 +12,8 @@ import { map } from 'rxjs/operators';
 export class DataService {
   constructor(private http: HttpClient) {}
 
-  getMaxMean(): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/max-mean`);
+  getMaxMean(): Observable<Data> {
+    return this.http.get<Data>(`${environment.apiUrl}/max-mean`);
   }
 
   getLocations(): Observable<Location[]> {
@@ -23,6 +24,12 @@ export class DataService {
           name: result.display_name
         }))
       )
+    );
+  }
+
+  getAverages(sourceId: number, destinationId: number): Observable<Data[]> {
+    return this.http.get<Data[]>(
+      `${environment.apiUrl}/averages/from/${sourceId}/to/${destinationId}`
     );
   }
 }

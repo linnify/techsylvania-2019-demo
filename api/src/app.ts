@@ -26,5 +26,8 @@ app.use(cors());
 app.get('/', api.checkHealth);
 app.get('/locations', locationsController.getAll);
 app.get('/max-mean', api.getMaxMeanValue);
-
+app.get(
+  '/averages/from/:sourceId/to/:destinationId',
+  locationsController.getAveragesPerHour
+);
 export default app;

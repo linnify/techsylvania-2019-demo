@@ -4,4 +4,5 @@ export interface Data {
   sourceName: string;
   destinationName: string;
   meanTravelTime: number;
+  hourOfDay?: number;
 }
