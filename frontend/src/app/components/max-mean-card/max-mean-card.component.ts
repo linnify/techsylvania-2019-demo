@@ -5,7 +5,7 @@ import { FormGroup } from '@angular/forms';
 @Component({
   selector: 'app-max-mean-card',
   template: `
-    <mat-card>
+    <mat-card style="height: 265px">
       <mat-card-title>
         Max Average Travel Time
       </mat-card-title>

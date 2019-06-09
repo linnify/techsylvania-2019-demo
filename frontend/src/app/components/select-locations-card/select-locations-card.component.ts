@@ -11,7 +11,7 @@ import { Path } from '../../types/path.interface';
 @Component({
   selector: 'app-select-locations-card',
   template: `
-    <mat-card>
+    <mat-card style="height: 265px">
       <mat-card-title>
         Select a source and a destination
       </mat-card-title>
