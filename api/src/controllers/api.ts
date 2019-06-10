@@ -1,7 +1,11 @@
-import { BigQuery } from '@google-cloud/bigquery';
+import { BigQuery, Dataset, Table } from '@google-cloud/bigquery';
 import { Request, Response } from 'express';
 import { DataRow } from '../types/data-row.interface';
-import { PROJECT_ID } from '../config/constants';
+import {
+  BIGQUERY_DATASET,
+  BIGQUERY_FINAL_TABLE,
+  PROJECT_ID
+} from '../config/constants';
 
 const bigQueryClient: BigQuery = new BigQuery();
 
@@ -13,13 +17,22 @@ export const checkHealth = (req: Request, res: Response) => {
   return res.send('Ok');
 };
 
+export const getLastModified = async (req: Request, res: Response) => {
+  const dataset = new Dataset(bigQueryClient, BIGQUERY_DATASET);
+  const table = new Table(dataset, BIGQUERY_FINAL_TABLE);
+
+  const [metadata] = await table.getMetadata();
+
+  return res.json(metadata.lastModifiedTime);
+};
+
 export const getMaxMeanValue = async (req: Request, res: Response) => {
   const query: string = `
     SELECT * FROM (
         SELECT sourceid AS sourceId, dstid AS destinationId, 
         source_name AS sourceName, destination_name AS destinationName, 
         AVG(mean_travel_time) as meanTravelTime 
-        FROM \`${PROJECT_ID}.uber.final_destination\`
+        FROM \`${PROJECT_ID}.${BIGQUERY_DATASET}.final_destination\`
         GROUP BY sourceId, destinationId, sourceName, destinationName
         ORDER BY meanTravelTime DESC
     )

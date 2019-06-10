@@ -9,13 +9,14 @@ import { map, startWith } from 'rxjs/operators';
     <mat-form-field class="full-width" appearance="outline">
       <mat-icon matPrefix>place</mat-icon>
       <mat-label>{{ title | titlecase }}</mat-label>
-      <mat-select [formControl]="control">
+      <mat-select [formControl]="control" (closed)="onClose()">
         <div class="filter sticky" fxLayout="row">
           <mat-icon matPrefix class="margin">search</mat-icon>
           <input
             matInput
             placeholder="Filter"
             type="text"
+            autocomplete="off"
             [formControl]="filterControl"
             (keydown.Space)="$event.stopPropagation()"
           />
@@ -71,5 +72,9 @@ export class FilterableSelectComponent implements OnInit {
           .toLowerCase()
           .indexOf(filterBy.toLowerCase()) > -1
     );
+  }
+
+  onClose() {
+    this.filterControl.setValue('');
   }
 }

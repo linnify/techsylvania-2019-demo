@@ -35,7 +35,7 @@ export const getAveragesPerHour = async (req: Request, res: Response) => {
     SELECT sourceid AS sourceId, dstid AS destinationId, 
     source_name AS sourceName, destination_name AS destinationName, mean_travel_time AS meanTravelTime,
     hod AS hourOfDay
-    FROM \`${PROJECT_ID}.uber.final_destination\`
+    FROM \`${PROJECT_ID}.${BIGQUERY_DATASET}.final_destination\`
     WHERE dstid = ${destination} AND sourceid = ${source}
     ORDER BY hourOfDay
   `;

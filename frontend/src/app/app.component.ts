@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatSnackBar } from '@angular/material';
 import { AddDataComponent } from './components';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, interval, Observable } from 'rxjs';
 import { Data } from './types/data.interface';
 import { DataService } from './services/data.service';
 import { Location } from './types/location.interface';
-import { filter, switchMap, tap } from 'rxjs/operators';
+import { filter, startWith, switchMap, tap } from 'rxjs/operators';
 import { Path } from './types/path.interface';
 
 @Component({
@@ -29,6 +29,9 @@ import { Path } from './types/path.interface';
         ></app-select-locations-card>
       </div>
       <app-chart-data [data]="averages$ | async"></app-chart-data>
+      <div class="mat-title">
+        Last Modified {{ lastModified$ | async | date: 'medium' }}
+      </div>
     </div>
     <app-add-data-button (add)="onAdd()"></app-add-data-button>
   `,
@@ -41,6 +44,8 @@ export class AppComponent implements OnInit {
   loadingChart = false;
   loadingMaxAverageTravelTime$ = new BehaviorSubject<boolean>(true);
   path$ = new BehaviorSubject<Path>(null);
+
+  lastModified$: Observable<number>;
 
   constructor(
     private dialog: MatDialog,
@@ -64,6 +69,11 @@ export class AppComponent implements OnInit {
     );
 
     this.locations$ = this.dataService.getLocations();
+
+    this.lastModified$ = interval(10000).pipe(
+      startWith(1),
+      switchMap(() => this.dataService.getLastModified())
+    );
   }
 
   onRefreshMaxMean() {
@@ -91,7 +101,7 @@ export class AppComponent implements OnInit {
 
   onAdd() {
     this.dialog
-      .open(AddDataComponent, { autoFocus: false })
+      .open(AddDataComponent, { autoFocus: false, disableClose: true })
       .afterClosed()
       .subscribe(value => {
         if (value) {
@@ -104,10 +114,5 @@ export class AppComponent implements OnInit {
 
   onApply(path: Path) {
     this.path$.next(path);
-
-    // this.loadingChart = true;
-    // this.averages$ = this.dataService
-    //   .getAverages(path.sourceId, path.destinationId)
-    //   .pipe(tap(() => (this.loadingChart = false)));
   }
 }

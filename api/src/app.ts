@@ -35,6 +35,8 @@ app.get('/locations', locationsController.getAll);
  */
 app.get('/max-mean', api.getMaxMeanValue);
 
+app.get('/modified', api.getLastModified);
+
 /**
  * Get the averages between 2 neighbourhoods
  * Pass the source and destination as query parameters

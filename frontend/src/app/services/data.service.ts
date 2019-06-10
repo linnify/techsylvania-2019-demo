@@ -35,4 +35,8 @@ export class DataService {
     };
     return this.http.get<Data[]>(`${environment.apiUrl}/averages`, { params });
   }
+
+  getLastModified(): Observable<number> {
+    return this.http.get<number>(`${environment.apiUrl}/modified`);
+  }
 }

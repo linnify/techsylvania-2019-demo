@@ -7,7 +7,7 @@ import { AGGREGATE_DATA_URL } from '../constants';
 const storageClient: Storage = new Storage();
 const bigQueryClient: BigQuery = new BigQuery();
 
-const bigQueryDataset: string = 'uber';
+const BIGQUERY_DATASET: string = 'uber';
 
 export const uploadToBigQuery = async (data: any, context: any) => {
   const bucketName: string = data.bucket;
@@ -23,19 +23,19 @@ export const uploadToBigQuery = async (data: any, context: any) => {
   const tableId: string = bigQuerySafeName(fileName);
 
   await bigQueryClient
-    .dataset(bigQueryDataset)
+    .dataset(BIGQUERY_DATASET)
     .table(tableId)
     .load(file, metadata);
 
   const aggregateData: DataRequest = {
-    sourceDatasetId: bigQueryDataset,
+    sourceDatasetId: BIGQUERY_DATASET,
     sourceTableId: tableId
   };
 
   // create a task to go to the next step in the pipeline, which is the aggregate data step
   return createCloudTask(
     'aggregate-data',
-    `${AGGREGATE_DATA_URL}?dataset=${bigQueryDataset}&table=${tableId}`,
+    `${AGGREGATE_DATA_URL}?dataset=${BIGQUERY_DATASET}&table=${tableId}`,
     aggregateData
   );
 };

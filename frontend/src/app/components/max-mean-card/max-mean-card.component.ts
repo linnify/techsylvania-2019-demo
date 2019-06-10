@@ -5,7 +5,7 @@ import { FormGroup } from '@angular/forms';
 @Component({
   selector: 'app-max-mean-card',
   template: `
-    <mat-card style="height: 258px;">
+    <mat-card style="height: 265px;">
       <mat-card-title fxLayout="row" fxLayoutAlign="space-between center">
         <div>Max Average Travel Time</div>
         <button mat-button color="primary" (click)="refresh.emit()">
@@ -13,7 +13,7 @@ import { FormGroup } from '@angular/forms';
         </button>
       </mat-card-title>
       <mat-card-content fxLayout="column">
-        <ng-container *ngIf="data && !loading; else noData">
+        <div *ngIf="data && !loading">
           <mat-form-field class="full-width" appearance="outline">
             <mat-label>Source</mat-label>
             <input matInput [value]="data.sourceName" disabled />
@@ -27,12 +27,12 @@ import { FormGroup } from '@angular/forms';
           <div class="mat-title">
             Time: {{ data.meanTravelTime | duration }}
           </div>
-        </ng-container>
-        <ng-template #noData>
-          <div class="no-data mat-title">
-            No data
-          </div>
-        </ng-template>
+        </div>
+
+        <div *ngIf="!data && !loading" class="no-data mat-title">
+          No data
+        </div>
+
         <div
           *ngIf="loading"
           fxLayout="row"
