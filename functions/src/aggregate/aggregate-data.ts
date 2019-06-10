@@ -1,8 +1,7 @@
 import { Request, Response } from 'express';
-import { DataRequest } from '../types/data-request.interface';
+import { DataRequest } from '../../types/data-request.interface';
 import { BigQuery, Table } from '@google-cloud/bigquery';
-import { checkAggregateJobUrl, createCloudTask } from './utils';
-import { CheckAggregateJobRequest } from '../types/check-aggregate-job-request.interface';
+import createCheckAggregateJobTask from './create-check-aggregate-job-task';
 
 const bigQueryClient: BigQuery = new BigQuery();
 const projectId: string = process.env.GCP_PROJECT;
@@ -45,22 +44,14 @@ export const aggregateData = async (req: Request, res: Response) => {
     writeDisposition: 'WRITE_TRUNCATE'
   });
 
-  const checkAggregateData: CheckAggregateJobRequest = {
-    sourceDatasetId: data.sourceDatasetId,
-    sourceTableId: destinationTableName,
-    jobId: job.id
-  };
-
   /**
    * Create a task to check if the job finished.
    */
-  return createCloudTask(
-    'check-aggregate-job',
-    `${checkAggregateJobUrl}?dataset=${
-      data.sourceDatasetId
-    }&table=${destinationTableName}&jobId=${job.id}`,
-    checkAggregateData
-  ).then(() => {
-    res.send('Query started');
-  });
+  await createCheckAggregateJobTask(
+    data.sourceDatasetId,
+    destinationTableName,
+    job.id
+  );
+
+  return res.send('Query started');
 };

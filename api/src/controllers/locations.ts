@@ -5,8 +5,7 @@ import {
   BIGQUERY_LOCATION_TABLE,
   PROJECT_ID
 } from '../config/constants';
-import { DataRow } from '../types/data-row.interface';
-import { Path } from '../types/path.interface';
+import { Params } from '../types/params.interface';
 
 const bigQueryClient: BigQuery = new BigQuery();
 
@@ -24,22 +23,30 @@ export const getAll = async (req: Request, res: Response) => {
   return res.send(rows);
 };
 
+/**
+ * Get Average Travel Time per hour
+ * @param req
+ * @param res
+ */
 export const getAveragesPerHour = async (req: Request, res: Response) => {
-  const path: Path = req.params;
+  const { source, destination } = req.query as Params;
 
   const query: string = `
     SELECT sourceid AS sourceId, dstid AS destinationId, 
     source_name AS sourceName, destination_name AS destinationName, mean_travel_time AS meanTravelTime,
     hod AS hourOfDay
     FROM \`${PROJECT_ID}.uber.final_destination\`
-    WHERE dstid = ${path.destinationId} AND sourceid = ${path.sourceId}
+    WHERE dstid = ${destination} AND sourceid = ${source}
     ORDER BY hourOfDay
   `;
 
-  const [job] = await bigQueryClient.createQueryJob({ query });
+  try {
+    const [job] = await bigQueryClient.createQueryJob({ query });
 
-  const [rows] = await job.getQueryResults();
+    const [rows] = await job.getQueryResults();
 
-  const dataRows: DataRow[] = rows;
-  res.json(dataRows);
+    return res.json(rows);
+  } catch (e) {
+    return res.status(200).send();
+  }
 };

@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { Location } from '../types/location.interface';
 import { map } from 'rxjs/operators';
 import { Data } from '../types/data.interface';
+import { Params } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -28,8 +29,10 @@ export class DataService {
   }
 
   getAverages(sourceId: number, destinationId: number): Observable<Data[]> {
-    return this.http.get<Data[]>(
-      `${environment.apiUrl}/averages/from/${sourceId}/to/${destinationId}`
-    );
+    const params: Params = {
+      source: sourceId,
+      destination: destinationId
+    };
+    return this.http.get<Data[]>(`${environment.apiUrl}/averages`, { params });
   }
 }

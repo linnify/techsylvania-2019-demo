@@ -1,9 +1,23 @@
-import { uploadToBigQuery } from './src/upload-to-bigquery';
-import { aggregateData } from './src/aggregate-data';
-import { updateFinalData } from './src/update-final-data';
-import { checkAggregateJob } from './src/check-aggregate-job';
+import * as aggregateFunctions from './src/aggregate';
+import * as uploadFileFunctions from './src/upload-file';
+import * as updateDataFunctions from './src/update-data';
 
-exports.uploadToBigQuery = uploadToBigQuery;
-exports.aggregateData = aggregateData;
-exports.checkAggregateJob = checkAggregateJob;
-exports.updateFinalData = updateFinalData;
+/**
+ * Upload the CSV file from Google Cloud Storage to BigQuery
+ */
+exports.uploadToBigQuery = uploadFileFunctions.uploadToBigQuery;
+
+/**
+ * Set the source name and destination name
+ */
+exports.aggregateData = aggregateFunctions.aggregateData;
+
+/**
+ * Check if the aggregate that job is done
+ */
+exports.checkAggregateJob = aggregateFunctions.checkAggregateJob;
+
+/**
+ * Update average travel time
+ */
+exports.updateFinalData = updateDataFunctions.updateFinalData;

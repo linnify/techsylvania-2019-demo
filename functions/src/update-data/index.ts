@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { DataRequest } from '../types/data-request.interface';
+import { DataRequest } from '../../types/data-request.interface';
 import { BigQuery, Table } from '@google-cloud/bigquery';
 
 const bigQueryClient: BigQuery = new BigQuery();
@@ -8,7 +8,7 @@ const projectId: string = process.env.GCP_PROJECT;
 /**
  * Function used to update the final data table.
  */
-export const updateFinalData = (req: Request, res: Response) => {
+export const updateFinalData = async (req: Request, res: Response) => {
   const data: DataRequest = {
     sourceTableId: req.query.table,
     sourceDatasetId: req.query.dataset
@@ -31,11 +31,11 @@ export const updateFinalData = (req: Request, res: Response) => {
     .dataset(data.sourceDatasetId)
     .table('final_destination');
 
-  return bigQueryClient
-    .createQueryJob({
-      query,
-      destination: destinationTable,
-      writeDisposition: 'WRITE_TRUNCATE'
-    })
-    .then(() => res.send('Updating final data started!'));
+  await bigQueryClient.createQueryJob({
+    query,
+    destination: destinationTable,
+    writeDisposition: 'WRITE_TRUNCATE'
+  });
+
+  return res.send('Updating final data started!');
 };

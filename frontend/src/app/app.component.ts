@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatSnackBar } from '@angular/material';
 import { AddDataComponent } from './components';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { Data } from './types/data.interface';
 import { DataService } from './services/data.service';
 import { Location } from './types/location.interface';
-import { tap } from 'rxjs/operators';
+import { filter, switchMap, tap } from 'rxjs/operators';
 import { Path } from './types/path.interface';
 
 @Component({
@@ -17,6 +17,8 @@ import { Path } from './types/path.interface';
         <app-max-mean-card
           fxFlex="50%"
           [data]="data$ | async"
+          [loading]="loadingMaxAverageTravelTime$ | async"
+          (refresh)="onRefreshMaxMean()"
         ></app-max-mean-card>
 
         <app-select-locations-card
@@ -37,6 +39,8 @@ export class AppComponent implements OnInit {
   locations$: Observable<Location[]>;
   averages$: Observable<Data[]>;
   loadingChart = false;
+  loadingMaxAverageTravelTime$ = new BehaviorSubject<boolean>(true);
+  path$ = new BehaviorSubject<Path>(null);
 
   constructor(
     private dialog: MatDialog,
@@ -45,18 +49,44 @@ export class AppComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.data$ = this.dataService
-      .getMaxMean()
-      .pipe(
-        tap(
-          (data: Data) =>
-            (this.averages$ = this.dataService.getAverages(
-              data.sourceId,
-              data.destinationId
-            ))
-        )
-      );
+    this.data$ = this.loadingMaxAverageTravelTime$.pipe(
+      filter(loading => loading),
+      switchMap(() => this.loadGetMaxMean())
+    );
+
+    this.averages$ = this.path$.pipe(
+      filter(path => !!path),
+      tap(() => (this.loadingChart = true)),
+      switchMap((path: Path) =>
+        this.dataService.getAverages(path.sourceId, path.destinationId)
+      ),
+      tap(() => (this.loadingChart = false))
+    );
+
     this.locations$ = this.dataService.getLocations();
+  }
+
+  onRefreshMaxMean() {
+    this.loadingMaxAverageTravelTime$.next(true);
+  }
+
+  private loadGetMaxMean(): Observable<Data> {
+    return this.dataService.getMaxMean().pipe(
+      tap(() => this.loadingMaxAverageTravelTime$.next(false)),
+      filter(data => !!data),
+      filter(
+        data =>
+          !this.path$.value ||
+          (data.destinationId === this.path$.value.destinationId &&
+            data.sourceId === this.path$.value.sourceId)
+      ),
+      tap((data: Data) =>
+        this.path$.next({
+          sourceId: data.sourceId,
+          destinationId: data.destinationId
+        })
+      )
+    );
   }
 
   onAdd() {
@@ -73,9 +103,11 @@ export class AppComponent implements OnInit {
   }
 
   onApply(path: Path) {
-    this.loadingChart = true;
-    this.averages$ = this.dataService
-      .getAverages(path.sourceId, path.destinationId)
-      .pipe(tap(() => (this.loadingChart = false)));
+    this.path$.next(path);
+
+    // this.loadingChart = true;
+    // this.averages$ = this.dataService
+    //   .getAverages(path.sourceId, path.destinationId)
+    //   .pipe(tap(() => (this.loadingChart = false)));
   }
 }

@@ -24,10 +24,21 @@ app.use(cors());
  * App Routes
  */
 app.get('/', api.checkHealth);
+
+/**
+ * Get all the neighbourhoods
+ */
 app.get('/locations', locationsController.getAll);
+
+/**
+ * Calculate the max mean
+ */
 app.get('/max-mean', api.getMaxMeanValue);
-app.get(
-  '/averages/from/:sourceId/to/:destinationId',
-  locationsController.getAveragesPerHour
-);
+
+/**
+ * Get the averages between 2 neighbourhoods
+ * Pass the source and destination as query parameters
+ */
+app.get('/averages', locationsController.getAveragesPerHour);
+
 export default app;

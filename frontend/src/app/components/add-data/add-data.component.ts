@@ -16,7 +16,7 @@ import { finalize, map } from 'rxjs/operators';
       </div>
 
       <div class="input-container">
-        <input type="file" (change)="onUploadFile($event)" />
+        <input type="file" (change)="onUploadFile($event)" accept=".csv" />
       </div>
 
       <div *ngIf="startUploading && uploadPercent | async as upload">

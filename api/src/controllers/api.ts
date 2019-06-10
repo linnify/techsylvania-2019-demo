@@ -26,10 +26,13 @@ export const getMaxMeanValue = async (req: Request, res: Response) => {
     LIMIT 1
   `;
 
-  const [job] = await bigQueryClient.createQueryJob({ query });
+  try {
+    const [job] = await bigQueryClient.createQueryJob({ query });
+    const [rows] = await job.getQueryResults();
 
-  const [rows] = await job.getQueryResults();
-
-  const dataRow: DataRow = rows[0];
-  res.json(dataRow);
+    const dataRow: DataRow = rows[0];
+    return res.json(dataRow);
+  } catch (e) {
+    return res.status(200).send();
+  }
 };

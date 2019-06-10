@@ -10,13 +10,19 @@ import { AngularFireStorageModule, StorageBucket } from '@angular/fire/storage';
 import { environment } from 'src/environments/environment';
 
 import * as fromComponents from './components';
+import * as fromPipes from './pipes';
+
 import { ChartsModule } from 'ng2-charts';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [AppComponent, ...fromComponents.components],
+  declarations: [
+    AppComponent,
+    ...fromComponents.components,
+    ...fromPipes.pipes
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,

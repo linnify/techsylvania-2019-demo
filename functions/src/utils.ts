@@ -1,12 +1,6 @@
 const { v2beta3 } = require('@google-cloud/tasks');
 const cloudTaskClient = new v2beta3.CloudTasksClient();
 
-const baseUrl =
-  'https://us-central1-techsylvania-2019-demo.cloudfunctions.net/';
-export const checkAggregateJobUrl: string = `${baseUrl}check-aggregate-job`;
-export const updateFinalDataUrl: string = `${baseUrl}update-final-data`;
-export const aggregateDataUrl: string = `${baseUrl}aggregate-data`;
-
 /**
  * Create a cloud task
  * @param queue - the name of the queue this task should be placed in
@@ -17,7 +11,7 @@ export const aggregateDataUrl: string = `${baseUrl}aggregate-data`;
 export const createCloudTask = (
   queue: string,
   url: string,
-  payload: any,
+  payload?: any,
   seconds?: number
 ) => {
   const location: string = process.env.FUNCTION_REGION;
@@ -29,12 +23,15 @@ export const createCloudTask = (
     httpRequest: {
       httpMethod: 'GET',
       url,
-      body: payload,
       headers: {
         'Content-Type': 'application/json'
       }
     }
   };
+
+  // if (payload) {
+  //   task.httpRequest.body =  Buffer.from(JSON.stringify(payload)).toString('base64');
+  // }
 
   if (seconds) {
     task.scheduleTime = {
@@ -48,4 +45,13 @@ export const createCloudTask = (
   };
 
   return cloudTaskClient.createTask(request);
+};
+
+/**
+ * Parse the name of the file to transform it into a table name accepted by bigquery
+ */
+export const bigQuerySafeName = (fileName: string) => {
+  let parsedText = fileName.split('.csv')[0].replace(/[_-]/g, '_');
+  parsedText = parsedText.replace(/[^a-zA-Z0-9_]/g, '');
+  return parsedText.substring(0, 1024);
 };

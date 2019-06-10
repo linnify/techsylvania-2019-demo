@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ChartDataSets } from 'chart.js';
 import { Color, Label } from 'ng2-charts';
 import { Data } from '../../types/data.interface';
+import { DurationPipe } from '../../pipes/duration.pipe';
 
 @Component({
   selector: 'app-chart-data',
@@ -36,7 +37,6 @@ export class ChartDataComponent implements OnInit {
         x: dataRow.hourOfDay,
         y: dataRow.meanTravelTime
       }));
-      console.log(this.lineChartData);
     }
   }
 
