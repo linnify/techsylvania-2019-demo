@@ -24,7 +24,7 @@ import { DurationPipe } from '../../pipes/duration.pipe';
 export class ChartDataComponent implements OnInit {
   public lineChartData: ChartDataSets[] = [
     {
-      label: 'Mean average Time',
+      label: 'Mean Travel Time',
       // xAxisID: 'Hour Of Day',
       // yAxisID: 'Travel Time',
       fill: false
