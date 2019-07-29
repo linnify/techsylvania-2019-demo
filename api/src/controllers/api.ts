@@ -8,7 +8,7 @@ import {
 } from '../config/constants';
 
 const bigQueryClient: BigQuery = new BigQuery();
-
+//Nothing to see here
 /**
  * GET /
  * Check Health on our API
