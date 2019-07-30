@@ -7,7 +7,9 @@ import {
   BIGQUERY_FINAL_TABLE,
   PROJECT_ID
 } from '../config/constants';
-
+//fesfsefgasfjsa
+//fesfes
+//3efesf
 const bigQueryClient: BigQuery = new BigQuery();
 //Nothing to see here
 /**
