@@ -8,7 +8,7 @@ const storageClient: Storage = new Storage();
 const bigQueryClient: BigQuery = new BigQuery();
 
 const BIGQUERY_DATASET: string = 'uber';
-
+// modification made here
 export const uploadToBigQuery = async (data: any, context: any) => {
   const bucketName: string = data.bucket;
   const fileName: string = data.name;
