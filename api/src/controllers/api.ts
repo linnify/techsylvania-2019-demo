@@ -17,7 +17,7 @@ const bigQueryClient: BigQuery = new BigQuery();
 export const checkHealth = (req: Request, res: Response) => {
   return res.send('Ok');
 };
-
+//modificare
 export const getLastModified = async (req: Request, res: Response) => {
   const dataset = new Dataset(bigQueryClient, BIGQUERY_DATASET);
   const table = new Table(dataset, BIGQUERY_FINAL_TABLE);
